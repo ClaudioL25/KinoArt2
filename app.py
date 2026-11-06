@@ -403,16 +403,18 @@ def mostrar_tarjeta(pelicula):
 # ==========================================
 # MOSTRAR PELÍCULAS
 # ==========================================
+
 def mostrar_peliculas(datos, columnas=3):
-   if datos.empty:
-st.info("No se encontraron películas.")
-       return
-   for inicio in range(0, len(datos), columnas):
-       grupo = datos.iloc[inicio:inicio + columnas]
-       cols = st.columns(columnas)
-       for col, (_, pelicula) in zip(cols, grupo.iterrows()):
-           with col:
-               mostrar_tarjeta(pelicula)
+    if datos.empty:
+        st.info("No se encontraron películas.")
+        return
+    for inicio in range(0, len(datos), columnas):
+        grupo = datos.iloc[inicio:inicio + columnas]
+        cols = st.columns(columnas)
+
+        for col, (_, pelicula) in zip(cols, grupo.iterrows()):
+            with col:
+                mostrar_tarjeta(pelicula)
 
 # ==========================================
 # PIE DE PÁGINA
@@ -628,25 +630,28 @@ elif pagina == "Próximos estrenos":
        errors="coerce"
    )
    proximos = proximos.sort_values("fecha_orden")
-   if proximos.empty:
-st.info(
-           "No hay próximos estrenos con fechas futuras registradas."
-       )
-   else:
-       for inicio in range(0, len(proximos), 3):
-           grupo = proximos.iloc[inicio:inicio + 3]
-           cols = st.columns(3)
-           for col, (_, pelicula) in zip(cols, grupo.iterrows()):
-               with col:
-                   mostrar_tarjeta(pelicula)
-                   fecha = pd.to_datetime(
-                       pelicula["fecha_estreno"],
-                       errors="coerce"
-                   )
-                   if pd.notna(fecha):
-                       st.markdown(
-                           f"**Estreno:** {fecha.strftime('%d/%m/%Y')}"
-                       )
+if proximos.empty:
+    st.info(
+        "No hay próximos estrenos con fechas futuras registradas."
+    )
+else:
+    for inicio in range(0, len(proximos), 3):
+        grupo = proximos.iloc[inicio:inicio + 3]
+        cols = st.columns(3)
+
+        for col, (_, pelicula) in zip(cols, grupo.iterrows()):
+            with col:
+                mostrar_tarjeta(pelicula)
+
+                fecha = pd.to_datetime(
+                    pelicula["fecha_estreno"],
+                    errors="coerce"
+                )
+
+                if pd.notna(fecha):
+                    st.markdown(
+                        f"**Estreno:** {fecha.strftime('%d/%m/%Y')}"
+                    )
 
 # ==========================================
 # INFORMACIÓN LEGAL
